@@ -11,8 +11,10 @@ ___INFO___
 {
   "type": "CLIENT",
   "id": "cvt_temp_public_id",
-  "categories": ["UTILITY"],
-  "__wm": "VGVtcGxhdGUtQXV0aG9yX0NhdGNoLWFsbC1DbGllbnQtU2ltby1BaGF2YQ==",
+  "categories": [
+    "UTILITY"
+  ],
+  "__wm": "VGVtcGxhdGUtQXV0aG9yX0NhdGNoLWFsbC1DbGllbnQtU2ltby1BaGF2YQ\u003d\u003d",
   "version": 1,
   "securityGroups": [],
   "displayName": "Catch-all Client",
@@ -67,11 +69,18 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "allowedOrigins",
-    "displayName": "Allowed origins",
+    "displayName": "Allowed Origins",
     "simpleValueType": true,
     "valueHint": "https://www.mydomain.com,https://sub.mydomain.com",
     "help": "Set to a comma-separated list of origins (e.g. https://www.mydomain.com) from which HTTP requests are allowed. Set to \u003cstrong\u003e*\u003c/strong\u003e to allow from any origin.",
     "alwaysInSummary": true
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "robotsTxt",
+    "checkboxText": "Wildcard Disallow For robots.txt Request",
+    "simpleValueType": true,
+    "defaultValue": true
   }
 ]
 
@@ -80,6 +89,7 @@ ___SANDBOXED_JS_FOR_SERVER___
 
 const claimRequest = require('claimRequest');
 const getRequestHeader = require('getRequestHeader');
+const getRequestPath = require('getRequestPath');
 const makeNumber = require('makeNumber');
 const returnResponse = require('returnResponse');
 const setResponseBody = require('setResponseBody');
@@ -94,8 +104,14 @@ if (data.allowedOrigins === '*') {
   data.allowedOrigins.split(',').forEach(o => setResponseHeader('Access-Control-Allow-Origin', o));
 }
 setResponseHeader('Access-Control-Allow-Credentials', 'true');
-setResponseStatus(makeNumber(data.statusCode));
-setResponseBody(data.statusMessage);
+if (data.robotsTxt && getRequestPath() === '/robots.txt') {
+  setResponseHeader('Content-Type', 'text/plain; charset=UTF-8');
+  setResponseStatus(200);
+  setResponseBody('User-agent: *\rDisallow: /');
+} else {
+  setResponseStatus(makeNumber(data.statusCode));
+  setResponseBody(data.statusMessage);
+}
 returnResponse();
 
 
@@ -188,6 +204,21 @@ ___SERVER_PERMISSIONS___
                     "string": "Access-Control-Allow-Credentials"
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "headerName"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "Content-Type"
+                  }
+                ]
               }
             ]
           }
@@ -231,6 +262,13 @@ ___SERVER_PERMISSIONS___
         },
         {
           "key": "headersAllowed",
+          "value": {
+            "type": 8,
+            "boolean": true
+          }
+        },
+        {
+          "key": "pathAllowed",
           "value": {
             "type": 8,
             "boolean": true
