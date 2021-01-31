@@ -98,7 +98,7 @@ const setResponseStatus = require('setResponseStatus');
 
 claimRequest();
 const origin = getRequestHeader('origin');
-if (data.allowedOrigins === '*') {
+if (data.allowedOrigins === '*' || (data.robotsTxt && getRequestPath() === '/robots.txt')) {
   setResponseHeader('Access-Control-Allow-Origin', origin);
 } else {
   data.allowedOrigins.split(',').forEach(o => setResponseHeader('Access-Control-Allow-Origin', o));
@@ -107,7 +107,7 @@ setResponseHeader('Access-Control-Allow-Credentials', 'true');
 if (data.robotsTxt && getRequestPath() === '/robots.txt') {
   setResponseHeader('Content-Type', 'text/plain; charset=UTF-8');
   setResponseStatus(200);
-  setResponseBody('User-agent: *\rDisallow: /');
+  setResponseBody('User-agent: *\nDisallow: /');
 } else {
   setResponseStatus(makeNumber(data.statusCode));
   setResponseBody(data.statusMessage);
