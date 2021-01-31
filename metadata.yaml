@@ -1,6 +1,8 @@
 homepage: "https://www.simoahava.com/"
 versions:
   # Latest version
+  - sha: 775c6acfa10a7fa6955587b6f58523767cd3692b
+    changeNotes: Add option to respond with wildcard disallow for robots.txt request.
+  # Older versions
   - sha: ca696d9b1548375080080ce31d5b3f0766ac1cc2
     changeNotes: Initial release.
-  # Older versions
