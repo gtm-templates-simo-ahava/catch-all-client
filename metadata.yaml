@@ -1,8 +1,10 @@
 homepage: "https://www.simoahava.com/"
 versions:
   # Latest version
+  - sha: e879a8ba12af031c58fb28ef049a2cbfb69eaf1b
+    changeNotes: Replace robots.txt with X-Robots-Tag header.
+  # Older versions
   - sha: 28cd83d1fd418ff024377a58fa1c4b13170b92ea
     changeNotes: Add option to respond with wildcard disallow for robots.txt request.
-  # Older versions
   - sha: ca696d9b1548375080080ce31d5b3f0766ac1cc2
     changeNotes: Initial release.
