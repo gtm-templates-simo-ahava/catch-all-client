@@ -77,10 +77,11 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "CHECKBOX",
-    "name": "robotsTxt",
-    "checkboxText": "Wildcard Disallow For robots.txt Request",
+    "name": "robots",
+    "checkboxText": "Add \"noindex\" X-Robots-Tag Header To Response",
     "simpleValueType": true,
-    "defaultValue": true
+    "defaultValue": true,
+    "help": "With this header in place, search engines will be discouraged from indexing the requested resource."
   }
 ]
 
@@ -98,20 +99,17 @@ const setResponseStatus = require('setResponseStatus');
 
 claimRequest();
 const origin = getRequestHeader('origin');
-if (data.allowedOrigins === '*' || (data.robotsTxt && getRequestPath() === '/robots.txt')) {
+if (data.allowedOrigins === '*') {
   setResponseHeader('Access-Control-Allow-Origin', origin);
 } else {
   data.allowedOrigins.split(',').forEach(o => setResponseHeader('Access-Control-Allow-Origin', o));
 }
 setResponseHeader('Access-Control-Allow-Credentials', 'true');
-if (data.robotsTxt && getRequestPath() === '/robots.txt') {
-  setResponseHeader('Content-Type', 'text/plain; charset=UTF-8');
-  setResponseStatus(200);
-  setResponseBody('User-agent: *\nDisallow: /');
-} else {
-  setResponseStatus(makeNumber(data.statusCode));
-  setResponseBody(data.statusMessage);
-}
+if (data.robots) setResponseHeader('X-Robots-Tag', 'noindex');
+
+setResponseStatus(makeNumber(data.statusCode));
+setResponseBody(data.statusMessage);
+
 returnResponse();
 
 
@@ -216,7 +214,7 @@ ___SERVER_PERMISSIONS___
                 "mapValue": [
                   {
                     "type": 1,
-                    "string": "Content-Type"
+                    "string": "X-Robots-Tag"
                   }
                 ]
               }
