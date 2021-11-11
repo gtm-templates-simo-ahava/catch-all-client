@@ -1,9 +1,11 @@
 homepage: "https://www.simoahava.com/"
 versions:
   # Latest version
+  - sha: 7d984737dfb188d06bf9d8dcc1294977246985b0
+    changeNotes: Fix origin check and ignore _set_cookie path
+  # Older versions
   - sha: e879a8ba12af031c58fb28ef049a2cbfb69eaf1b
     changeNotes: Replace robots.txt with X-Robots-Tag header.
-  # Older versions
   - sha: 28cd83d1fd418ff024377a58fa1c4b13170b92ea
     changeNotes: Add option to respond with wildcard disallow for robots.txt request.
   - sha: ca696d9b1548375080080ce31d5b3f0766ac1cc2
