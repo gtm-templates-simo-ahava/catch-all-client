@@ -97,6 +97,9 @@ const setResponseBody = require('setResponseBody');
 const setResponseHeader = require('setResponseHeader');
 const setResponseStatus = require('setResponseStatus');
 
+// Abort if request is for _set_cookie, as that should not be caught by a Client
+if (getRequestPath() === '/_set_cookie') return;
+
 claimRequest();
 const origin = getRequestHeader('origin');
 if (data.allowedOrigins === '*') {
