@@ -106,7 +106,7 @@ const allowedOrigins = data.allowedOrigins || '';
 if (allowedOrigins === '*') {
   setResponseHeader('Access-Control-Allow-Origin', origin);
 } else {
-  data.allowedOrigins.split(',').forEach(o => {
+  allowedOrigins.split(',').forEach(o => {
     if (o.trim() === origin) setResponseHeader('Access-Control-Allow-Origin', o);
   });
 }
