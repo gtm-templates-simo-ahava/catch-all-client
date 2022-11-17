@@ -102,7 +102,8 @@ if (getRequestPath() === '/_set_cookie') return;
 
 claimRequest();
 const origin = getRequestHeader('origin');
-if (data.allowedOrigins === '*') {
+const allowedOrigins = data.allowedOrigins || '';
+if (allowedOrigins === '*') {
   setResponseHeader('Access-Control-Allow-Origin', origin);
 } else {
   data.allowedOrigins.split(',').forEach(o => {
